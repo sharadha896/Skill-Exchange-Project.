@@ -1,0 +1,74 @@
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 60px;
+  background:#f3f4f6;
+  border-bottom:1px solid #ddd;
+}
+
+/* Logo */
+
+.logo{
+  font-size:22px;
+  font-weight:bold;
+  color:#333;
+}
+
+/* Menu */
+
+.nav-menu{
+  display:flex;
+  list-style:none;
+}
+
+.nav-menu li{
+  margin:0 20px;
+}
+
+.nav-menu a{
+  text-decoration:none;
+  color:#05244e;
+  font-size:16px;
+}
+
+.nav-menu a:hover{
+  color:#2563eb;
+}
+
+/* Buttons */
+
+.nav-buttons{
+  display:flex;
+  align-items:center;
+}
+
+.login{
+  margin-right:20px;
+  text-decoration:none;
+  color:#2563eb;
+  font-weight:500;
+}
+
+.signup{
+  background:#4f7df3;
+  color:white;
+  border:none;
+  padding:8px 18px;
+  border-radius:8px;
+  cursor:pointer;
+}
+.profile-section img{
+  border:2px solid white;
+}
+.profile-section {
+  cursor: pointer;
+}
+
+.profile-img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid white;
+}

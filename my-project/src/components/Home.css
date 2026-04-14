@@ -1,0 +1,94 @@
+.home {
+  background: linear-gradient(to right, skyblue, skyblue);
+  padding: 40px;
+}
+
+/* HERO */
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.hero-left {
+  max-width: 500px;
+}
+
+.hero-left h1 {
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.hero-left p {
+  margin-top: 15px;
+  color: rgb(68, 52, 152);
+}
+
+/* BUTTONS */
+.hero-buttons {
+  margin-top: 20px;
+}
+
+.btn-primary {
+  background: #fbbf24;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.btn-link {
+  background: none;
+  border: none;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+/* IMAGE */
+.hero-right img {
+  width: 350px;
+}
+
+/* STATS */
+.stats {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 40px;
+}
+
+.stat-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+/* VIDEOS */
+.videos-section {
+  margin-top: 50px;
+  text-align: center;
+}
+
+.video-cards {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.video-card {
+  background: white;
+  padding: 10px;
+  border-radius: 10px;
+  width: 300px;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+}
+
+.video-card iframe {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+}

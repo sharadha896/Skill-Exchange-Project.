@@ -1,0 +1,85 @@
+/* Background */
+.profile-container {
+  height: 100vh;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Card */
+.profile-card {
+  width: 400px;
+  background: white;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+/* Image */
+.profile-img-section img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+  border: 3px solid #667eea;
+}
+
+/* Input */
+.profile-img-section input {
+  margin-top: 10px;
+}
+
+/* Fields */
+.profile-field {
+  margin: 15px 0;
+  text-align: left;
+}
+
+.profile-field label {
+  font-size: 13px;
+  color: #777;
+}
+
+.profile-field p {
+  font-weight: bold;
+}
+
+.profile-field input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Buttons */
+.profile-actions {
+  margin-top: 20px;
+}
+
+.edit-btn {
+  width: 100%;
+  padding: 10px;
+  background: linear-gradient(to right, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.save-btn {
+  width: 100%;
+  padding: 10px;
+  background: green;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.edit-btn:hover, .save-btn:hover {
+  transform: scale(1.05);
+}
