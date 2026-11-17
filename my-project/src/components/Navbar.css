@@ -72,3 +72,12 @@
   object-fit: cover;
   border: 2px solid white;
 }
+.logout {
+  background: #e53935;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-left: 12px;
+}

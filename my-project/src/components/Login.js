@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import "./Login.css";
-import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Toast from "./Toast";
+import { useNavigate } from "react-router-dom";
+import "./Signup.css";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -11,59 +11,50 @@ function Login() {
 
   const navigate = useNavigate();
 
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleLogin = async () => {
-    if (!email || !password) {
-      setToast({
-        type: "error",
-        message: "Please fill all fields ❌"
-      });
-      setTimeout(() => setToast(null), 3000);
+    if (!email.trim() || !password.trim()) {
+      showToast("error", "Fill all fields ❌");
       return;
     }
 
     try {
-      const response = await axios.post("http://localhost:5000/login", {
-        email,
-        password,
+      const res = await axios.post("http://localhost:5000/login", {
+        email: email.trim(),
+        password: password.trim(),
       });
 
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-
-      // ✅ SUCCESS TOAST
-      setToast({
-        type: "success",
-        message: "Login successful 🎉"
-      });
-
-      setTimeout(() => {
-        setToast(null);
-        navigate("/dashboard");
-      }, 2000);
-
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      window.dispatchEvent(new Event("userChanged"));
+      navigate("/dashboard");
     } catch (error) {
+      console.log("STATUS:", error.response?.status);
+      console.log("DATA:", error.response?.data);
+
       let msg = "Login failed ❌";
-
-      if (error.response) msg = error.response.data.message;
-      else if (error.request) msg = "Server not responding 🚫";
-
-      setToast({
-        type: "error",
-        message: msg
-      });
-
-      setTimeout(() => setToast(null), 3000);
+      if (error.response?.data?.message) {
+        msg = error.response.data.message;
+      } else if (error.response?.data?.error) {
+        msg = error.response.data.error;
+      } else if (error.message === "Network Error") {
+        msg = "Backend run avvatledu ❌";
+      }
+      showToast("error", msg);
     }
   };
 
   return (
-    <div className="login-container">
-      <div className="login-box">
-        <h3>Please enter your details</h3>
-        <h1>Welcome back</h1>
+    <div className="signup-container">
+      <div className="signup-box">
+        <h2>LOGIN</h2>
 
         <input
           type="email"
-          placeholder="Email address"
+          placeholder="Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -75,16 +66,15 @@ function Login() {
           onChange={(e) => setPassword(e.target.value)}
         />
 
-        <button className="login-btn" onClick={handleLogin}>
-          Sign in
+        <button className="signup-btn" onClick={handleLogin}>
+          LOGIN
         </button>
 
         <p>
-          Don't have an account? <Link to="/signup">Sign up</Link>
+          New here? <a href="/signup">Register</a>
         </p>
       </div>
 
-      {/* ✅ TOAST */}
       {toast && (
         <Toast
           type={toast.type}

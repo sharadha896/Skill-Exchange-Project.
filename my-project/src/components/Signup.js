@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Signup.css";
 import axios from "axios";
 import Toast from "./Toast";
@@ -12,13 +12,18 @@ function Signup() {
 
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (localStorage.getItem("user")) navigate("/dashboard");
+  }, [navigate]);
+
+  const showToast = (type, message) => {
+    setToast({ type, message });
+    setTimeout(() => setToast(null), 3000);
+  };
+
   const handleRegister = async () => {
     if (!name || !email || !password) {
-      setToast({
-        type: "error",
-        message: "Fill all fields ❌"
-      });
-      setTimeout(() => setToast(null), 3000);
+      showToast("error", "Fill all fields ❌");
       return;
     }
 
@@ -28,31 +33,22 @@ function Signup() {
         email,
         password,
         skillsOffered: ["React"],
-        skillsWanted: ["Node"]
+        skillsWanted: ["Node"],
       });
 
-      // ✅ SUCCESS
-      setToast({
-        type: "success",
-        message: "Registration successful 🎉"
-      });
-
-      setTimeout(() => {
-        setToast(null);
-        navigate("/login");
-      }, 2000);
-
+      showToast("success", "Registration successful 🎉");
+      setTimeout(() => navigate("/login"), 1500);
     } catch (error) {
+      console.log("STATUS:", error.response?.status);
+      console.log("DATA:", error.response?.data);
+
       let msg = "Registration failed ❌";
-
-      if (error.response) msg = error.response.data.error;
-
-      setToast({
-        type: "error",
-        message: msg
-      });
-
-      setTimeout(() => setToast(null), 3000);
+      if (error.response?.data?.error) {
+        msg = error.response.data.error;
+      } else if (error.message === "Network Error") {
+        msg = "Backend run avvatledu ❌";
+      }
+      showToast("error", msg);
     }
   };
 
@@ -67,14 +63,12 @@ function Signup() {
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
-
         <input
           type="email"
           placeholder="Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-
         <input
           type="password"
           placeholder="Password"
@@ -91,7 +85,6 @@ function Signup() {
         </p>
       </div>
 
-      {/* ✅ TOAST */}
       {toast && (
         <Toast
           type={toast.type}

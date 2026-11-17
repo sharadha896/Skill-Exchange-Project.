@@ -10,6 +10,8 @@ function AddVideo() {
   const [file, setFile] = useState(null);
   const [skill, setSkill] = useState("");
   const [rating, setRating] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -19,55 +21,74 @@ function AddVideo() {
       return;
     }
 
-    try {
-      const storageRef = ref(storage, "videos/" + Date.now() + file.name);
+    setLoading(true);
+    setProgress(0);
 
-      const uploadTask = uploadBytesResumable(storageRef, file);
+    try {
+      const storageRef = ref(
+        storage,
+        "videos/" + Date.now() + "_" + file.name.replace(/\s+/g, "_")
+      );
+
+      // contentType ivvadam important (play avvadaniki)
+      const uploadTask = uploadBytesResumable(storageRef, file, {
+        contentType: file.type || "video/mp4",
+      });
 
       uploadTask.on(
         "state_changed",
-        () => {
-          console.log("Uploading...");
+        (snapshot) => {
+          const percent = Math.round(
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+          );
+          setProgress(percent);
         },
         (error) => {
-          console.error(error);
-          alert("Upload failed");
+          console.error("UPLOAD ERROR:", error.code, error.message);
+          alert("Upload failed: " + error.code);
+          setLoading(false);
         },
         async () => {
-          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          try {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            console.log("VIDEO URL:", url);
 
-          console.log("VIDEO URL:", url);
+            await addDoc(collection(db, "videos"), {
+              title,
+              url,
+              skill,
+              rating: Number(rating),
+              likes: 0,
+              comments: [],
+            });
 
-          await addDoc(collection(db, "videos"), {
-            title,
-            url,
-            skill,
-            rating: Number(rating),
-            likes:0,
-            comments:[]
-          });
+            alert("Video uploaded successfully 🎉");
 
-          alert("Video uploaded successfully 🎉");
+            setTitle("");
+            setFile(null);
+            setSkill("");
+            setRating("");
+            setProgress(0);
+            setLoading(false);
 
-          setTitle("");
-          setFile(null);
-          setSkill("");
-          setRating("");
-
-          navigate("/dashboard");
+            navigate("/dashboard");
+          } catch (err) {
+            console.error("FIRESTORE ERROR:", err.code, err.message);
+            alert("Saving failed: " + err.code);
+            setLoading(false);
+          }
         }
       );
-
     } catch (error) {
       console.error(error);
       alert("Error uploading video");
+      setLoading(false);
     }
   };
 
   return (
     <div className="addvideo-container">
       <div className="addvideo-card">
-
         <h2>Add Learning Video 🎥</h2>
 
         <input
@@ -93,14 +114,17 @@ function AddVideo() {
         <input
           type="number"
           placeholder="Rating (1-5)"
+          min="1"
+          max="5"
           value={rating}
           onChange={(e) => setRating(e.target.value)}
         />
 
-        <button onClick={handleAdd} className="add-btn">
-          Upload Video 🚀
-        </button>
+        {loading && <p>Uploading... {progress}%</p>}
 
+        <button onClick={handleAdd} className="add-btn" disabled={loading}>
+          {loading ? "Uploading..." : "Upload Video 🚀"}
+        </button>
       </div>
     </div>
   );

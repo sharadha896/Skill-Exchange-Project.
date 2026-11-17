@@ -1,25 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const load = () => {
+      const saved = localStorage.getItem("user");
+      setUser(saved ? JSON.parse(saved) : null);
+    };
+    load();
+    window.addEventListener("userChanged", load);
+    return () => window.removeEventListener("userChanged", load);
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem("user");
+    window.dispatchEvent(new Event("userChanged"));
     navigate("/login");
   };
 
   return (
     <div className="navbar">
-
-      {/* Logo */}
       <div className="logo" onClick={() => navigate("/")}>
         <span>🔁</span> SkillSwap
       </div>
 
-      {/* Menu */}
       <ul className="nav-menu">
         <li><Link to="/">Home</Link></li>
         <li><Link to="/browse">Browse Skills</Link></li>
@@ -27,36 +35,28 @@ function Navbar() {
         <li><Link to="/courses">All Courses</Link></li>
       </ul>
 
-      {/* Right side */}
       <div className="nav-buttons">
         {user ? (
           <>
-            {/* 👤 Profile Section */}
-            <div 
+            <div
               className="profile-section"
-              onClick={() => navigate("/dashboard")} // ✅ goes to dashboard
+              onClick={() => navigate("/dashboard")}
             >
               <img
                 src={user.image || "https://via.placeholder.com/40"}
                 alt="profile"
                 className="profile-img"
               />
-            
             </div>
-
-            {/* 🔥 Logout */}
-            
+            <button className="logout" onClick={handleLogout}>Logout</button>
           </>
         ) : (
           <>
             <Link to="/login" className="login">Login</Link>
-            <Link to="/signup" className="signup">Sign Up</Link>
-            <Link to="/add-course" className="add-course">Add Course</Link>
-
+            <Link to="/signup" className="signup">Register</Link>
           </>
         )}
       </div>
-
     </div>
   );
 }
